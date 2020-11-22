@@ -2,8 +2,6 @@ import React, {useState, useEffect} from 'react';
 import {Questionare} from './components/index';
 import ProgressBar from "./components/progressbar";
 
-const API_URL = "https://opentdb.com/api.php?amount=28&category=11&difficulty=easy";
-
 
 function App() {
     const [questions, setQuestions] = useState([]);
@@ -12,16 +10,15 @@ function App() {
     const [ShowAnswers, setShowAnswers] = useState(false);
 
     useEffect(() => {
-        fetch(API_URL)
+        fetch('http://localhost:3000/data.json')
         .then(res => res.json())
         .then(data => {
             const questions = data.results.map((question) => 
             ({
                 ...question,
                 answers: [
-                    question.correct_answer,
-                    ...question.incorrect_answers
-                ].sort(() => Math.random() - 0.5),
+                    ...question.MyAnswers
+                ],
             }))
             
             setQuestions(questions)
@@ -46,18 +43,6 @@ function App() {
 
         setCurrentQuestion(currentIndex + 1);
     }
-
-    // const ProgressBar = (props) => {
-    //     return (
-    //       <div className="">
-    //         <progress
-    //           className=""
-    //           max={props.total}
-    //           value={props.position}
-    //         ></progress>
-    //       </div>
-    //     );
-    //   };
     const testData = [{ 
         bgcolor: "#ef6c00", 
         total: currentIndex, 
@@ -71,7 +56,6 @@ function App() {
             {testData.map((item, idx) => (
                 <ProgressBar key={idx} bgcolor={item.bgcolor} completed={currentIndex} total={questions.length} />
             ))}
-            {/* <ProgressBar position={currentIndex} total={questions.length} /> */}
             <Questionare data={questions[currentIndex]} handleNextQuestion={handleNextQuestion} ShowAnswers={ShowAnswers} toggleAnswer={toggleAnswer} />
         </div>
         ) : (
