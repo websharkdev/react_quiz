@@ -1,47 +1,58 @@
 import React, { useState } from 'react'
 import StartPage from './StartPage'
 import TestPage from './TestPage'
-import questions from './data.json'
+import ResultPage from './ResultPage'
+import questions from './questions.json'
 
-function App() {
+import { Redirect, Route, Switch, withRouter } from 'react-router-dom'
+
+// todo загрузить из LS предыдущие результаты (results) и записать в стейтменеджер
+
+const App = (props) => {
+  const total = questions.length
+  const { history } = props
+
+  const [result, setResult] = useState({
+    prioritizer: 0,
+    visualizer: 0,
+    organizer: 0,
+    planner: 0,
+  })
+
   const [currentIndex, setCurrentQuestion] = useState(0)
-  const [score, setScore] = useState(0)
-  const [ShowAnswers, setShowAnswers] = useState(false)
 
-  const toggleAnswer = (answer) => {
+  const nextAnswer = (index) => {
+    const point = index + 1
+    const { type } = questions[currentIndex]
 
-    if (!ShowAnswers) {
-      if (answer === questions[currentIndex].correct_answer) {
-        setScore(score + 1)
-      }
-    }
+    setResult({
+      ...result,
+      [type]: result[type] + point,
+    })
 
-    setShowAnswers(true)
-
-  }
-
-  const handleNextQuestion = () => {
-    setShowAnswers(false)
+    history.push({
+      pathname: `questions/${ currentIndex }`,
+    })
 
     setCurrentQuestion(currentIndex + 1)
   }
 
   const question = questions[currentIndex]
+
   return (
-    currentIndex >= questions.length ? (
-      <StartPage />
-    ) : (questions.length > 0 ? (
-      <TestPage
-        currentIndex={currentIndex}
-        total={questions.length}
-        data={question}
-        handleNextQuestion={handleNextQuestion}
-        ShowAnswers={ShowAnswers}
-        toggleAnswer={toggleAnswer}
+    <Switch>
+      <Route exact history={ history } path='/' component={ StartPage } />
+      <Route history={ history } path='/questions/:id'
+             render={ () => <TestPage
+               total={ total }
+               data={ question }
+               nextAnswer={ nextAnswer }
+             /> }
       />
-    ) : (
-      <h3 className="text-white font-semibold">Loading...</h3>
-    ))
+      <Route exact history={ history } path='/result' result={ result } component={ ResultPage } />
+      <Redirect from='/' to='/' />
+    </Switch>
   )
 }
-export default App
+
+export default withRouter(App)
