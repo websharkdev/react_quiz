@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Questionare = ({ShowAnswers, handleNextQuestion, toggleAnswer, data: {question, correct_answer, answers}}) => {
+const Questionare = ({ShowAnswers, handleNextQuestion, toggleAnswer, data: {question, MyAnswers, answers}}) => {
     
     
 
@@ -11,10 +11,9 @@ const Questionare = ({ShowAnswers, handleNextQuestion, toggleAnswer, data: {ques
             </div>
 
             <div className="grid grid-cols-2 gap-6 mt-6">
-                {answers.map(answer => { 
-                    const bgColor = ShowAnswers ? answer === correct_answer ? 'bg-green-200' : 'bg-red-200' : 'bg-white';
+                {answers.map(MyAnswers => {
                     return(
-                        <button className={`${bgColor} text-center font-semibold shadow rauded p-4 text-purple-800`} onClick={() => toggleAnswer(answer)} dangerouslySetInnerHTML={{__html:answer}}/>
+                        <button className={`bg-white text-center font-semibold shadow rauded p-4 text-purple-800`} onClick={() => toggleAnswer(MyAnswers)} dangerouslySetInnerHTML={{__html:MyAnswers}}/>
                     )}
                 )}
             </div>
