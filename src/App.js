@@ -1,66 +1,47 @@
-import React, {useState, useEffect} from 'react';
-import {Questionare} from './components/index';
-import ProgressBar from "./components/progressbar";
-
+import React, { useState } from 'react'
+import StartPage from './StartPage'
+import TestPage from './TestPage'
+import questions from './data.json'
 
 function App() {
-    const [questions, setQuestions] = useState([]);
-    const [currentIndex, setCurrentQuestion] = useState(0)
-    const [score, setScore] = useState(0);
-    const [ShowAnswers, setShowAnswers] = useState(false);
+  const [currentIndex, setCurrentQuestion] = useState(0)
+  const [score, setScore] = useState(0)
+  const [ShowAnswers, setShowAnswers] = useState(false)
 
-    useEffect(() => {
-        fetch('http://localhost:3000/data.json')
-        .then(res => res.json())
-        .then(data => {
-            const questions = data.results.map((question) => 
-            ({
-                ...question,
-                answers: [
-                    ...question.MyAnswers
-                ],
-            }))
-            
-            setQuestions(questions)
-        })
-    }, []);
-    
-       
-    const toggleAnswer = (answer) => {
-        
-        if(!ShowAnswers) {
-            if(answer === questions[currentIndex].correct_answer) {
-                setScore(score + 1);
-            }
-        }
+  const toggleAnswer = (answer) => {
 
-        setShowAnswers(true);
-
-    };
-
-    const handleNextQuestion = () => {
-        setShowAnswers(false);
-
-        setCurrentQuestion(currentIndex + 1);
+    if (!ShowAnswers) {
+      if (answer === questions[currentIndex].correct_answer) {
+        setScore(score + 1)
+      }
     }
-    const testData = [{ 
-        bgcolor: "#ef6c00", 
-        total: currentIndex, 
-        completed: questions.length, 
-    }];
-    return(
-        currentIndex >= questions.length ? ( 
-            <h2 className="text-white font-semibold text-lg">Your score was {score}</h2>
-        ) : (questions.length > 0 ? (
-        <div className="container">
-            {testData.map((item, idx) => (
-                <ProgressBar key={idx} bgcolor={item.bgcolor} completed={currentIndex} total={questions.length} />
-            ))}
-            <Questionare data={questions[currentIndex]} handleNextQuestion={handleNextQuestion} ShowAnswers={ShowAnswers} toggleAnswer={toggleAnswer} />
-        </div>
-        ) : (
-            <h3 className="text-white font-semibold">Loading...</h3>
-        ))
-    )
-};
-export default App;
+
+    setShowAnswers(true)
+
+  }
+
+  const handleNextQuestion = () => {
+    setShowAnswers(false)
+
+    setCurrentQuestion(currentIndex + 1)
+  }
+
+  const question = questions[currentIndex]
+  return (
+    currentIndex >= questions.length ? (
+      <StartPage />
+    ) : (questions.length > 0 ? (
+      <TestPage
+        currentIndex={currentIndex}
+        total={questions.length}
+        data={question}
+        handleNextQuestion={handleNextQuestion}
+        ShowAnswers={ShowAnswers}
+        toggleAnswer={toggleAnswer}
+      />
+    ) : (
+      <h3 className="text-white font-semibold">Loading...</h3>
+    ))
+  )
+}
+export default App
