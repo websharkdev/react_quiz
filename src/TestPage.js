@@ -1,31 +1,27 @@
-import React from 'react'
-import ProgressBar from './components/progressbar'
-import { Question } from './components'
+import React from "react";
+import { useParams } from "react-router-dom";
+import { Question, ProgressBar } from "./components";
+import questions from "./questions.json";
 
 function TestPage(props) {
+  const { id } = useParams();
+  const currentIndex = id - 1;
+  const { question, type } = questions[currentIndex];
+  const { total, handleNextQuestion, nextAnswer, history } = props;
 
-  // todo проверить в localStorage переменная inProgress. Если true, то показать вопрос.
-  //  Достать и записать в стейтменджер предыдущие ответы из localStorage переменная currentAnswers [1, 1, 1]
-  // if (!data) {
-  //   console.log(history)
-  //   history.push('/')
-  //   return null
-  // }
-  console.log(props)
-
-  const { currentIndex, total, data, handleNextQuestion, nextAnswer, history } = props
   return (
     <div className="container">
-      <ProgressBar bgcolor="#ef6c00" completed={ currentIndex } total={ total } />
+      <ProgressBar bgcolor="#ef6c00" completed={currentIndex} total={total} />
 
       <Question
-        data={ data }
-        history={ history }
-        handleNextQuestion={ handleNextQuestion }
-        nextAnswer={ nextAnswer }
+        question={question}
+        type={type}
+        history={history}
+        handleNextQuestion={handleNextQuestion}
+        nextAnswer={nextAnswer}
       />
     </div>
-  )
+  );
 }
 
-export default TestPage
+export default TestPage;

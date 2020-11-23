@@ -1,3 +1,4 @@
-import Question from './Question'
+import Question from "./Question";
+import ProgressBar from "./Progressbar";
 
-export { Question }
+export { Question, ProgressBar };
