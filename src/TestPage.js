@@ -6,7 +6,7 @@ import questions from "./questions.json";
 function TestPage(props) {
   const { id } = useParams();
   const currentIndex = id - 1;
-  const { question, type } = questions[currentIndex];
+  const { question } = questions[currentIndex];
   const { total, handleNextQuestion, nextAnswer, history } = props;
 
   return (
@@ -15,7 +15,6 @@ function TestPage(props) {
 
       <Question
         question={question}
-        type={type}
         history={history}
         handleNextQuestion={handleNextQuestion}
         nextAnswer={nextAnswer}

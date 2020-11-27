@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 
 const answers = [
   "1 (Никогда)",
@@ -9,6 +9,11 @@ const answers = [
 ];
 
 const Question = ({ nextAnswer, question }) => {
+  const [LSBox, setLSBox] = useState({});
+
+  useEffect(() => {
+    console.log(LSBox);
+  }, [LSBox]);
   return (
     <div className="flex flex-col">
       <div className="bg-white text-purple-800 p-4 text-center rounded-lg shadow-md">
@@ -22,6 +27,11 @@ const Question = ({ nextAnswer, question }) => {
               className={`bg-white text-center font-semibold shadow rauded p-4 text-purple-800`}
               key={index}
               onClick={() => {
+                setLSBox({
+                  id: Date.now(),
+                  question: question,
+                  answer: answer
+                });
                 nextAnswer(index);
               }}
             >

@@ -19,8 +19,6 @@ const App = (props) => {
 
   const [currentIndex, setCurrentQuestion] = useState(0);
 
-  const question = questions[currentIndex];
-
   const nextAnswer = (index) => {
     const point = index + 1;
     const { type } = questions[currentIndex];
@@ -30,7 +28,7 @@ const App = (props) => {
       [type]: result[type] + point
     });
     history.push({
-      pathname: `${currentIndex + 1}`
+      pathname: `${currentIndex < total - 1 ? currentIndex + 1 : "/resultpage"}`
     });
     setCurrentQuestion(currentIndex + 1);
   };
@@ -41,15 +39,11 @@ const App = (props) => {
         <StartPage />
       </Route>
       <Route path="/questions/:id">
-        <TestPage total={total} data={question} nextAnswer={nextAnswer} />
+        <TestPage total={total} data={questions} nextAnswer={nextAnswer} />
       </Route>
-      <Route
-        exact
-        history={history}
-        path="/result"
-        result={result}
-        component={ResultPage}
-      />
+      <Route exact path="/resultpage" result={result} history={history}>
+        <ResultPage />
+      </Route>
       <Redirect from="/" to="/" />
     </Switch>
   );
